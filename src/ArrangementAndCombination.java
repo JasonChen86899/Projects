@@ -10,7 +10,7 @@ public class ArrangementAndCombination {
     public static void main(String[] args){
         String[] l={"1","2","3","9"};
         CoreMethod(l,"",0);
-        System.out.println(StringSet.size());
+        //System.out.println(StringSet.size());
     }
 
     /**
@@ -53,7 +53,7 @@ public class ArrangementAndCombination {
         }
         if(o(l))
             StringMap.put(l,StringMap.get(l)+l.length()-1);
-        else
+        else{
 
         }
     }
