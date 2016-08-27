@@ -3,10 +3,7 @@ package ConnectionPool;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,8 +16,9 @@ public class ConnectionPool extends AbstractExecutorService {
     private HashSet<Thread> threadsset = new HashSet<>();
     private ReentrantLock reentrantLock = new ReentrantLock();
     private Condition notEmpty = reentrantLock.newCondition();
+    private CyclicBarrier cyclicBarrier;
     private Runnable recycleRunable = () ->{
-        while(true){
+        while(!Thread.currentThread().isInterrupted()){
             Runnable firstRunable = runableQueue.poll();
             if(firstRunable!=null)
                 firstRunable.run();
@@ -29,7 +27,9 @@ public class ConnectionPool extends AbstractExecutorService {
                 try {
                     notEmpty.await();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    System.out.println("Not Empty Be Interrupted");
+                    Thread.currentThread().interrupt();
                 }finally {
                     reentrantLock.unlock();
                 }
@@ -45,12 +45,28 @@ public class ConnectionPool extends AbstractExecutorService {
 
     @Override
     public void shutdown() {
-
+        boolean falg = true;
+        retry:
+        while(falg){
+            //自旋的方式
+            falg = false;
+            Iterator<Thread> i = threadsset.iterator();
+            while(i.hasNext()){
+                if(i.next().getState()!=Thread.State.WAITING) {
+                    falg = true;
+                    continue retry;
+                }
+            }
+        }
+        threadsset.stream().filter(thread -> thread.getState()==Thread.State.WAITING).forEach(thread -> thread.interrupt());
     }
 
     @Override
     public List<Runnable> shutdownNow() {
-        return null;
+        threadsset.stream().forEach(thread -> thread.interrupt());
+        ArrayList arrayList = new ArrayList();
+        runableQueue.stream().forEach(runnable -> arrayList.add(runnable));
+        return arrayList;
     }
 
     @Override
