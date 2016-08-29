@@ -1,4 +1,4 @@
-package test;
+package h.test;
 
 import h.Son;
 

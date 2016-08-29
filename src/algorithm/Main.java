@@ -1,4 +1,4 @@
-/**
+package algorithm; /**
  * Created by I330347 on 8/1/2016.
  */
 import java.util.Queue;
