@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ngdbc">
-    <CLASSES>
-      <root url="jar://C:/sap/SAP HANA Database Client/ngdbc.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

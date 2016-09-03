@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component name="dataSourceStorage">
-  <data-source name="SAP HANA - jdbc:sap://10.128.170.56:30315" uuid="ce370496-e272-4a65-bc20-babcf63ff21a">
-    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
-  </data-source>
-</component>
